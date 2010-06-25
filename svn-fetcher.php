@@ -1,6 +1,6 @@
 <?php
 
-$config = parse_ini_file('svn_config.ini');
+$config = parse_ini_file('svn-fetcher.ini');
 
 $db_host = $config['db_host'];
 $db_name = $config['db_name'];
