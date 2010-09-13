@@ -16,7 +16,7 @@ $sql0 = "SELECT * FROM `configuration` WHERE `option` = 'revision'";
 $sth0 = $dbh->prepare($sql0);
 $sth0->execute();
 $result = $sth0->fetch(PDO::FETCH_OBJ);
-$revision = $result->value + 1;
+$revision = $result->value;
 
 $sql1 = "INSERT INTO svn_revision_log (revision, author, commit_msg, commit_time, file_changed) VALUES (?, ?, ?, ?, ?)";
 $sth1 = $dbh->prepare($sql1);
@@ -28,12 +28,17 @@ $sth2 = $dbh->prepare($sql2);
 
 echo "from $revision to SVN_REVISION_HEAD\n";
 
+$array = array();
+
 $array = svn_log($url, $revision, SVN_REVISION_HEAD);
 
 foreach($array as $row)
-{
-	if(! empty($row))
+{	
+	if(	! empty($row))
 	{
+		if($row['rev'] == $revision)
+			continue;
+	
 		$time =  strtotime($row['date']);
 		$datetime = date('Y-m-d H:i:s', $time);
 		$sth1->execute(array($row['rev'], $row['author'], $row['msg'], $datetime, count($row['paths'])));
