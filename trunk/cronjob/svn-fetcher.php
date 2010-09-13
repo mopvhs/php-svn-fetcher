@@ -1,3 +1,4 @@
+#!/usr/bin/php5
 <?php
 
 $config = parse_ini_file('svn-fetcher.ini');
@@ -47,12 +48,14 @@ foreach($array as $row)
 	}    
 }
 
-$sql3 = "UPDATE  `configuration` SET  `value` = ? WHERE  `option` = 'revision'";
-$sth3 = $dbh->prepare($sql3);
-$sth3->execute(array("$revision"));
+if(!empty($array))
+{
+	$sql3 = "UPDATE  `configuration` SET  `value` = ? WHERE  `option` = 'revision'";
+	$sth3 = $dbh->prepare($sql3);
+	$sth3->execute(array("$revision"));
 
-echo "final revision: $revision\n";
-
+	echo "final revision: $revision\n";
+}
 /*
 $diff = svn_diff_same_item($url, $from, $to);
 
